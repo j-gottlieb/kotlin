@@ -85,6 +85,21 @@ public inline fun <T> T.apply(block: T.() -> Unit): T {
 }
 
 /**
+ * If the predicate is true, calls the specified function [block] with `this` value as its receiver. Always returns `this` value.
+ *
+ * For detailed usage information see the documentation for [scope functions](https://kotlinlang.org/docs/reference/scope-functions.html#apply).
+ */
+@kotlin.internal.InlineOnly
+public inline fun <T> T.applyIf(predicate: Boolean block: T.() -> Unit): T {
+    if (!predicate) return this
+    contract {
+        callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+    }
+    block()
+    return this
+}
+
+/**
  * Calls the specified function [block] with `this` value as its argument and returns `this` value.
  *
  * For detailed usage information see the documentation for [scope functions](https://kotlinlang.org/docs/reference/scope-functions.html#also).
@@ -92,6 +107,22 @@ public inline fun <T> T.apply(block: T.() -> Unit): T {
 @kotlin.internal.InlineOnly
 @SinceKotlin("1.1")
 public inline fun <T> T.also(block: (T) -> Unit): T {
+    contract {
+        callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+    }
+    block(this)
+    return this
+}
+
+/**
+ * If the predicate is true, calls the specified function [block] with `this` value as its argument. Always returns `this` value.
+ *
+ * For detailed usage information see the documentation for [scope functions](https://kotlinlang.org/docs/reference/scope-functions.html#also).
+ */
+@kotlin.internal.InlineOnly
+@SinceKotlin("1.1")
+public inline fun <T> T.alsoIf(predicate: Boolean, block: (T) -> Unit): T {
+    if (!predicate) return this
     contract {
         callsInPlace(block, InvocationKind.EXACTLY_ONCE)
     }
